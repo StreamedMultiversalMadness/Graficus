@@ -1,2 +1,1 @@
-
-            
+if(from == Vector2Zero() || to == Vector2Zero())continue;

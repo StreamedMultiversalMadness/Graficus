@@ -102,23 +102,37 @@ void DrawForFun(Pensel *p)
     {
         Vector2 point = GetMousePosition();
 
-        p->lastAddedIndex++;
+        
        
-        if(p->lastAddedIndex == p->arraySize)
+        if(p->lastAddedIndex == p->arraySize-1)
         {
             p->lastAddedIndex = 0;
         }
 
         p->points[p->lastAddedIndex] = point;
+
+        p->lastAddedIndex++;
+    }
+    else if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+    {
+         if(p->lastAddedIndex == p->arraySize-1)
+        {
+            p->lastAddedIndex = 0;
+        }
+
+        p->points[p->lastAddedIndex] = Vector2Zero();
+
+        p->lastAddedIndex++;
     }
 
 
-    for(int i = 0; i < p->arraySize-1; i++)
+    for(int i = 1; i < p->arraySize; i++)
     {
         Vector2 from = p->points[i-1];
         Vector2 to = p->points[i];
         if(from == Vector2Zero() || to == Vector2Zero())continue;
-        DrawLine(from.x, from.y, to.y, to.y, WHITE);
+        DrawLineEx(from, to, 2.0f, WHITE);
+        // CustomLine(from, to, 2.0f, WHITE,)
     }
 
     
