@@ -94,25 +94,11 @@ void GenerateGrid(Vector2 startPos, Vector2 direction, Vector2 offset, ScreenInf
 
     
 
-    from = Vector2{startPos.x - stretchDirection.x * 5000, startPos.y - stretchDirection.y * 5000};
-    to = Vector2{startPos.x + stretchDirection.x * 50000, startPos.y + stretchDirection.y * 50000};
+    from = Vector2{startPos.x - stretchDirection.x * sizeX, startPos.y - stretchDirection.y * sizeX};
+    to = Vector2{startPos.x + stretchDirection.x * sizeX, startPos.y + stretchDirection.y * sizeY};
     
     
     DrawLineV(from, to, lineColor);
-    
-    
-    for(int i = 1; i < center_y/lineSpacing; i++)
-    {
-
-        from = Vector2{startPos.x - stretchDirection.x * 5000, startPos.y - stretchDirection.y * 5000 + lineSpacing*i};
-        to = Vector2{startPos.x + stretchDirection.x * 50000, startPos.y + stretchDirection.y * 50000 + lineSpacing*i};
-        DrawLineV(from, to, lineColor);
-
-
-        from = Vector2{startPos.x - stretchDirection.x * 5000, startPos.y - stretchDirection.y * 5000 - lineSpacing*i};
-        to = Vector2{startPos.x + stretchDirection.x * 50000, startPos.y + stretchDirection.y * 50000 - lineSpacing*i};
-        DrawLineV(from, to, lineColor);
-    }
 }
 
 struct Pensel
