@@ -33,7 +33,7 @@ void CustomLine(Vector2 from, Vector2 to, float thickness, Color color)
     
     for(int x = 0; x < distance; x++)
     {
-        DrawPixel(from.x + x * direction.x, from.y + from.y * direction.y, color);
+        DrawPixel(from.x + x * direction.x, from.y + x * direction.y, color);
     }
 }
 
@@ -98,21 +98,10 @@ void GenerateGrid(Vector2 startPos, Vector2 direction, Vector2 offset, ScreenInf
     to = Vector2{startPos.x + stretchDirection.x * 50000, startPos.y + stretchDirection.y * 50000};
     
     
-    DrawLineV(from, to, lineColor);
+    CustomLine(from, to, 0, lineColor);
     
     
-    for(int i = 1; i < center_y/lineSpacing; i++)
-    {
-
-        from = Vector2{startPos.x - stretchDirection.x * 5000, startPos.y - stretchDirection.y * 5000 + lineSpacing*i};
-        to = Vector2{startPos.x + stretchDirection.x * 50000, startPos.y + stretchDirection.y * 50000 + lineSpacing*i};
-        DrawLineV(from, to, lineColor);
-
-
-        from = Vector2{startPos.x - stretchDirection.x * 5000, startPos.y - stretchDirection.y * 5000 - lineSpacing*i};
-        to = Vector2{startPos.x + stretchDirection.x * 50000, startPos.y + stretchDirection.y * 50000 - lineSpacing*i};
-        DrawLineV(from, to, lineColor);
-    }
+ 
 }
 
 struct Pensel
