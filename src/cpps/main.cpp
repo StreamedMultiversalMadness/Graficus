@@ -26,14 +26,14 @@ float RiemannSum()
     return sum;
 }
 
-void CustomLine(Vector2 from, Vector2 to, float thickness, Color color, int middle)
+void CustomLine(Vector2 from, Vector2 to, float thickness, Color color)
 {
     float distance = Vector2Distance(from, to);
     Vector2 direction = Vector2Normalize(Vector2Subtract(to, from));
     
     for(int x = 0; x < distance; x++)
     {
-        DrawPixel(from.x + x * direction.x, from.y + middle * direction.y, color);
+        DrawPixel(from.x + x * direction.x, from.y + from.y * direction.y, color);
     }
 }
 
@@ -41,6 +41,7 @@ struct ScreenInfo
 {
     Vector2 size;
     Vector2 center;
+    Vector2 centeroffset;
     float ratio;
     Color color;
 };
@@ -59,8 +60,21 @@ ScreenInfo GetScreenInfo(Color screenColor)
     return info;
 }
 
-void GenerateGrid(Vector2 offset, ScreenInfo* screenInfo)
+void StrechLine(Vector2 direction, Vector2 startPos, float thickness, Color color)
 {
+    
+}
+
+float GetHypotenuse(float x, float y)
+{
+    return sqrt(x*x + y*y);
+}
+
+
+void GenerateGrid(Vector2 startPos, Vector2 direction, Vector2 offset, ScreenInfo* screenInfo)
+{
+    direction = Vector2Normalize(direction);
+
     float lineThickness = 0;
     float lineSpacing = 80;
 
@@ -69,22 +83,35 @@ void GenerateGrid(Vector2 offset, ScreenInfo* screenInfo)
     float sizeX = screenInfo->size.x;
     float sizeY = screenInfo->size.y;
     float screenRatio = screenInfo->ratio;
-    float middleOfScreen_y = screenInfo->center.x;
-    float middleOfScreen_x = screenInfo->center.y;
+    float center_x = screenInfo->center.x;
+    float center_y = screenInfo->center.y;
 
-    Vector2 from = Vector2{0, middleOfScreen_y};
-    Vector2 to = Vector2{sizeX, middleOfScreen_y};
-    CustomLine(from, to, screenRatio * lineThickness, lineColor, middleOfScreen_y);
-    for(int i = 1; i < middleOfScreen_y/lineSpacing; i++)
+    Vector2 stretchDirection = Vector2{-direction.x, direction.y}; // Orthogonal to moveDirection
+    
+
+    Vector2 from;
+    Vector2 to;
+
+    
+
+    from = Vector2{startPos.x - stretchDirection.x * 5000, startPos.y - stretchDirection.y * 5000};
+    to = Vector2{startPos.x + stretchDirection.x * 50000, startPos.y + stretchDirection.y * 50000};
+    
+    
+    DrawLineV(from, to, lineColor);
+    
+    
+    for(int i = 1; i < center_y/lineSpacing; i++)
     {
 
-        from = Vector2{0, middleOfScreen_y + lineSpacing * i};
-        to = Vector2{sizeX, middleOfScreen_y + lineSpacing * i};
-        CustomLine(from, to, screenRatio * lineThickness, lineColor, middleOfScreen_y);
+        from = Vector2{startPos.x - stretchDirection.x * 5000, startPos.y - stretchDirection.y * 5000 + lineSpacing*i};
+        to = Vector2{startPos.x + stretchDirection.x * 50000, startPos.y + stretchDirection.y * 50000 + lineSpacing*i};
+        DrawLineV(from, to, lineColor);
 
-        from = Vector2{0, middleOfScreen_y - lineSpacing * i};
-        to = Vector2{sizeX, middleOfScreen_y - lineSpacing * i};
-        CustomLine(from, to, screenRatio * lineThickness, lineColor, middleOfScreen_y);
+
+        from = Vector2{startPos.x - stretchDirection.x * 5000, startPos.y - stretchDirection.y * 5000 - lineSpacing*i};
+        to = Vector2{startPos.x + stretchDirection.x * 50000, startPos.y + stretchDirection.y * 50000 - lineSpacing*i};
+        DrawLineV(from, to, lineColor);
     }
 }
 
@@ -157,7 +184,7 @@ int main()
 
     Pensel pensel;
     
-
+    float angle = PI;
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
@@ -168,9 +195,12 @@ int main()
 
             ClearBackground(screenInfo.color);
             
-
+            if(IsKeyDown(KEY_V))
+            {
+                angle-= 0.01f;
+            }
             
-            GenerateGrid(Vector2Zero(), &screenInfo);
+            GenerateGrid(screenInfo.center, Vector2{cos(angle), sin(angle)}, Vector2Zero(), &screenInfo);
 
             DrawForFun(&pensel);
             
